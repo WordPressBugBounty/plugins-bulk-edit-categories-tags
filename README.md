@@ -1,0 +1,1 @@
+# plugins-bulk-edit-categories-tags
