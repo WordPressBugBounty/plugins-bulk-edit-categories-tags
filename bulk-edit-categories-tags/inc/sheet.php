@@ -98,6 +98,46 @@ if ( !class_exists( 'WPSE_Taxonomy_Terms_Sheet' ) ) {
             );
         }
 
+        /**
+         * When we're creating new terms, we need to save the WP core data first, so we get
+         * the new term ID and use that to save the other columns
+         *
+         * @param  array $item
+         * @param  int $term_id
+         * @param  string $post_type
+         * @param  array $spreadsheet_columns
+         * @return array|WP_Error
+         */
+        public function save_core_term_data_first(
+            $item,
+            $term_id,
+            $post_type,
+            $spreadsheet_columns
+        ) {
+            if ( VGSE()->helpers->get_current_provider()->key !== 'term' || $term_id !== PHP_INT_MAX ) {
+                return $item;
+            }
+            $core_column_keys = array(
+                'name',
+                'slug',
+                'description',
+                'parent',
+                'taxonomy'
+            );
+            $term_data = array_intersect_key( $item, array_flip( $core_column_keys ) );
+            if ( empty( $term_data ) ) {
+                return $item;
+            }
+            $term_data['ID'] = $item['ID'];
+            $term_id = VGSE()->helpers->get_current_provider()->update_item_data( $term_data, true );
+            if ( is_wp_error( $term_id ) ) {
+                return $term_id;
+            }
+            $item_without_core_data = array_diff_key( $item, array_flip( $core_column_keys ) );
+            $item_without_core_data['ID'] = $term_id;
+            return $item_without_core_data;
+        }
+
         public function merge_duplicate_terms( $taxonomy_key ) {
             global $wpdb;
             $sql = $wpdb->prepare( "SELECT term.name, taxonomy.parent, COUNT(*) count, GROUP_CONCAT(term.term_id SEPARATOR ',') as term_ids FROM {$wpdb->prefix}terms term\r\nLEFT JOIN {$wpdb->prefix}term_taxonomy taxonomy ON term.term_id = taxonomy.term_id \r\nWHERE taxonomy.taxonomy = %s\r\nGROUP BY term.name, taxonomy.parent \r\nHAVING count > 1 LIMIT 20", $taxonomy_key );

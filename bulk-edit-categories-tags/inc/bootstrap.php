@@ -32,22 +32,21 @@ if (!class_exists('WPSE_Taxonomy_Terms_Spreadsheet_Bootstrap')) {
 
 			foreach ($post_types as $post_type) {
 				$this->columns->register_item('ID', $post_type, array(
-					'data_type' => 'post_data', //String (post_data,post_meta|meta_data)	
-					'unformatted' => array('data' => 'ID', 'renderer' => 'html', 'readOnly' => true), //Array (Valores admitidos por el plugin de handsontable)
-					'column_width' => 75, //int (Ancho de la columna)
-					'title' => __('ID', vgse_taxonomy_terms()->textname), //String (Titulo de la columna)
-					'type' => '', // String (Es para saber si será un boton que abre popup, si no dejar vacio) boton_tiny|boton_gallery|boton_gallery_multiple|(vacio)
+					'data_type' => 'post_data', 	
+					'column_width' => 75, 
+					'title' => __('ID', vgse_taxonomy_terms()->textname),
+					'type' => '',
 					'supports_formulas' => false,
 					'allow_to_hide' => false,
 					'allow_to_save' => false,
 					'allow_to_rename' => false,
-					'formatted' => array('data' => 'ID', 'renderer' => 'html', 'readOnly' => true),
+					'is_locked' => true,
 				));
 				if (is_taxonomy_hierarchical($post_type)) {
 					$this->columns->register_item('wpse_term_levels', $post_type, array(
-						'data_type' => 'post_data', //String (post_data,post_meta|meta_data)	
-						'column_width' => 100, //int (Ancho de la columna)
-						'title' => __('Hierarchy', vgse_taxonomy_terms()->textname), //String (Titulo de la columna)
+						'data_type' => 'post_data', 	
+						'column_width' => 100, 
+						'title' => __('Hierarchy', vgse_taxonomy_terms()->textname),
 						'allow_to_hide' => false,
 						'allow_to_save' => false,
 						'allow_to_save_sanitization' => false,
@@ -56,29 +55,23 @@ if (!class_exists('WPSE_Taxonomy_Terms_Spreadsheet_Bootstrap')) {
 					));
 				}
 				$this->columns->register_item('name', $post_type, array(
-					'data_type' => 'post_data', //String (post_data,post_meta|meta_data)	
-					'unformatted' => array('data' => 'name',), //Array (Valores admitidos por el plugin de handsontable)
-					'column_width' => 210, //int (Ancho de la columna)
-					'title' => __('Name', vgse_taxonomy_terms()->textname), //String (Titulo de la columna)
-					'formatted' => array('data' => 'name',),
+					'data_type' => 'post_data',
+					'column_width' => 210,
+					'title' => __('Name', vgse_taxonomy_terms()->textname),
 					'supports_formulas' => true,
 				));
 				$this->columns->register_item('slug', $post_type, array(
-					'data_type' => 'post_data', //String (post_data,post_meta|meta_data)	
-					'unformatted' => array('data' => 'slug'), //Array (Valores admitidos por el plugin de handsontable)
-					'column_width' => 150, //int (Ancho de la columna)
-					'title' => __('Slug', vgse_taxonomy_terms()->textname), //String (Titulo de la columna)
-					'formatted' => array('data' => 'slug'),
+					'data_type' => 'post_data',
+					'column_width' => 150,
+					'title' => __('Slug', vgse_taxonomy_terms()->textname),
 					'supports_formulas' => true,
 				));
 				if (is_taxonomy_hierarchical($post_type)) {
 					$this->columns->register_item('parent', $post_type, array(
-						'data_type' => 'post_data', //String (post_data,post_meta|meta_data)	
-						'unformatted' => array('data' => 'parent'), //Array (Valores admitidos por el plugin de handsontable)
+						'data_type' => 'post_data', 	
 						'column_width' => 100,
 						'title' => __('Parent', vgse_taxonomy_terms()->textname),
 						'formatted' => array(
-							'data' => 'parent',
 							'type' => 'autocomplete',
 							'source' => 'loadTaxonomyTerms',
 							'taxonomy_key' => $post_type
@@ -88,17 +81,16 @@ if (!class_exists('WPSE_Taxonomy_Terms_Spreadsheet_Bootstrap')) {
 					));
 				}
 				$this->columns->register_item('wpse_status', $post_type, array(
-					'data_type' => 'post_data', //String (post_data,post_meta|meta_data)	
-					'unformatted' => array('data' => 'wpse_status',), //Array (Valores admitidos por el plugin de handsontable)
-					'column_width' => 80, //int (Ancho de la columna)
-					'title' => __('Status', vgse_taxonomy_terms()->textname), //String (Titulo de la columna)
-					'type' => '', // String (Es para saber si será un boton que abre popup, si no dejar vacio) boton_tiny|boton_gallery|boton_gallery_multiple|(vacio)
+					'data_type' => 'post_data', 	
+					'column_width' => 80, 
+					'title' => __('Status', vgse_taxonomy_terms()->textname),
+					'type' => '',
 					'supports_formulas' => true,
 					'allow_to_hide' => false,
 					'allow_to_save' => true,
 					'allow_to_rename' => true,
 					'default_value' => 'active',
-					'formatted' => array('data' => 'wpse_status', 'editor' => 'select', 'selectOptions' => array(
+					'formatted' => array('editor' => 'select', 'selectOptions' => array(
 							'active',
 							'delete',
 						)),
@@ -110,35 +102,30 @@ if (!class_exists('WPSE_Taxonomy_Terms_Spreadsheet_Bootstrap')) {
 					$count_key = 'count';
 				}
 				$this->columns->register_item($count_key, $post_type, array(
-					'data_type' => 'post_data', //String (post_data,post_meta|meta_data)	
-					'unformatted' => array('renderer' => 'html', 'readOnly' => true), //Array (Valores admitidos por el plugin de handsontable)
+					'data_type' => 'post_data', 	
 					'column_width' => 75,
 					'title' => __('Count', vgse_taxonomy_terms()->textname),
 					'supports_formulas' => false,
 					'allow_to_save' => false,
-					'formatted' => array('renderer' => 'html', 'readOnly' => true),
 					'is_locked' => true,
 				));
 				$post_content_args = array(
 					'data_type' => 'post_data',
-					'unformatted' => array('data' => 'description', 'renderer' => 'html', 'readOnly' => true),
 					'column_width' => 180,
 					'title' => __('Description', vgse_taxonomy_terms()->textname),
 					'type' => 'boton_tiny',
 					'supports_formulas' => true,
-					'formatted' => array('data' => 'description', 'renderer' => 'html', 'readOnly' => true),
 					'allow_to_hide' => true,
 					'allow_to_save' => false,
 					'allow_to_rename' => true,
 				);
 				$this->columns->register_item('description', $post_type, $post_content_args);
 				$this->columns->register_item('taxonomy', $post_type, array(
-					'data_type' => 'post_data', //String (post_data,post_meta|meta_data)	
-					'unformatted' => array('data' => 'taxonomy'), //Array (Valores admitidos por el plugin de handsontable)
-					'column_width' => 100, //int (Ancho de la columna)
+					'data_type' => 'post_data', 	
+					'column_width' => 100, 
 					'supports_formulas' => true,
-					'title' => __('Taxonomy', vgse_taxonomy_terms()->textname), //String (Titulo de la columna)
-					'formatted' => array('data' => 'taxonomy', 'editor' => 'select', 'selectOptions' => $post_types),
+					'title' => __('Taxonomy', vgse_taxonomy_terms()->textname),
+					'formatted' => array('editor' => 'select', 'selectOptions' => $post_types),
 					'supports_sql_formulas' => false,
 				));
 
@@ -172,7 +159,7 @@ if (!class_exists('WPSE_Taxonomy_Terms_Spreadsheet_Bootstrap')) {
 				}
 				if (is_taxonomy_hierarchical($post_type)) {
 					$this->columns->register_item('wpse_full_hierarchy', $post_type, array(
-						'data_type' => 'post_data', //String (post_data,post_meta|meta_data)	
+						'data_type' => 'post_data', 	
 						'column_width' => 100,
 						'title' => __('Full hierarchy', vgse_taxonomy_terms()->textname),
 						'supports_formulas' => true,
