@@ -17,7 +17,6 @@ class VGSE_Provider_Term extends VGSE_Provider_Abstract {
 	var $terms_with_levels   = array();
 
 	private function __construct() {
-
 	}
 
 	function get_provider_read_capability( $post_type_key ) {
@@ -76,7 +75,6 @@ WHERE tt.taxonomy = %s AND pm.meta_key = %s",
 	}
 
 	function init() {
-
 	}
 
 	function get_total( $post_type = null ) {
@@ -149,7 +147,6 @@ WHERE tt.taxonomy = %s AND pm.meta_key = %s",
 	}
 
 	function prefetch_data( $post_ids, $post_type, $spreadsheet_columns ) {
-
 	}
 
 	function get_item_terms( $id, $taxonomy ) {
@@ -239,6 +236,21 @@ WHERE tt.taxonomy = %s AND pm.meta_key = %s",
 		if ( ! empty( $query_args['include'] ) || strpos( $original_filters, '"meta"' ) !== false ) {
 			$query_args['search'] = true;
 		}
+		if ( VGSE()->get_option( 'taxonomy_sheets_unset_invalid_parent' ) ) {
+			foreach ( $terms as $term ) {
+				if ( $term->parent > 0 ) {
+					$parent_term = get_term_by( 'term_id', $term->parent, $term->taxonomy );
+					if ( ! $parent_term || ( $parent_term && $parent_term->term_id !== $term->parent ) ) {
+						$this->update_item_data(
+							array(
+								'ID'     => $term->term_id,
+								'parent' => 0,
+							)
+						);
+					}
+				}
+			}
+		}
 		if ( is_taxonomy_hierarchical( $taxonomy ) && ( empty( $query_args['fields'] ) || $query_args['fields'] !== 'ids' ) ) {
 			if ( ! empty( $query_args['search'] ) || ! empty( $query_args['wpse_term_parents'] ) ) {// Ignore children on searches.
 				$children = array();
@@ -277,6 +289,21 @@ WHERE tt.taxonomy = %s AND pm.meta_key = %s",
 		return $out;
 	}
 
+	/**
+	 * Prepares a list of terms for display by filtering, organizing by hierarchy, and adding hierarchy level about each term.
+	 *
+	 * @param string $taxonomy The taxonomy to process the terms for.
+	 * @param array $terms An array of terms to prepare.
+	 * @param array &$children An array of child terms indexed by their parent ID.
+	 * @param int $start The starting index for pagination.
+	 * @param int $per_page The number of terms per page.
+	 * @param int &$count A reference to a variable that keeps track of the current count of terms processed.
+	 * @param array $query_args An array of query arguments that control how the terms are filtered and displayed.
+	 * @param int $parent The ID of the parent term for which this function is being called recursively.
+	 * @param int $level The level of nesting at which the current term is located.
+	 *
+	 * @return array An array of associative arrays, each containing a term object, its level, and its ID.
+	 */
 	function prepare_terms_list( $taxonomy, $terms, &$children, $start, $per_page, &$count, $query_args, $parent = 0, $level = 0 ) {
 
 		$end       = $start + $per_page;
@@ -313,7 +340,7 @@ WHERE tt.taxonomy = %s AND pm.meta_key = %s",
 						'level'   => $level - $num_parents,
 						'term_id' => $my_parent->term_id,
 					);
-					$num_parents--;
+					--$num_parents;
 				}
 			}
 
@@ -388,7 +415,7 @@ WHERE tt.taxonomy = %s AND pm.meta_key = %s",
 			$out = $this->get_item_meta( $id, $key, true, 'read' );
 		}
 
-		if( $key === 'parent' && $out === '0'){
+		if ( $key === 'parent' && $out === '0' ) {
 			$out = 0;
 		}
 
@@ -484,8 +511,8 @@ WHERE tt.taxonomy = %s AND pm.meta_key = %s",
 		return $result;
 	}
 
-	function delete_item_meta($id, $key) {
-		delete_term_meta($id, $key);
+	function delete_item_meta( $id, $key ) {
+		delete_term_meta( $id, $key );
 	}
 	function update_item_meta( $id, $key, $value ) {
 		return update_term_meta( $id, $key, apply_filters( 'vg_sheet_editor/provider/term/update_item_meta', $value, $id, $key ) );
@@ -620,5 +647,4 @@ ORDER BY t.name ASC";
 
 		return apply_filters( 'vg_sheet_editor/provider/term/all_meta_fields', $meta_keys, $post_type );
 	}
-
 }
