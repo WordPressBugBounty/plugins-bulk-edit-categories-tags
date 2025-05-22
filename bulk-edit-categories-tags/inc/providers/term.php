@@ -10,7 +10,7 @@ if ( ! class_exists( 'VGSE_Provider_Abstract' ) ) {
 
 class VGSE_Provider_Term extends VGSE_Provider_Abstract {
 
-	private static $instance = false;
+	private static $instance = null;
 	var $key                 = 'term';
 	var $is_post_type        = false;
 	static $data_store       = array();

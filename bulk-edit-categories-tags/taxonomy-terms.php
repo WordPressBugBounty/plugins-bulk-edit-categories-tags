@@ -4,7 +4,7 @@ defined( 'ABSPATH' ) || exit;
 /*
   Plugin Name: WP Sheet Editor - Taxonomy Terms
   Description: Edit categories and tags in a spreadsheet.
-  Version: 1.7.19
+  Version: 1.7.20
   Author:      WP Sheet Editor
   Author URI:  https://wpsheeteditor.com/?utm_source=wp-admin&utm_medium=plugins-list&utm_campaign=taxonomy-terms
   Plugin URI: https://wpsheeteditor.com/go/taxonomy-terms-addon?utm_source=wp-admin&utm_medium=plugins-list&utm_campaign=taxonomy-terms

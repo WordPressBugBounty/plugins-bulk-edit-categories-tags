@@ -1,8 +1,8 @@
 {
     "name": "wp-sheet-editor-taxonomy-terms",
-    "version": "1.7.19",
+    "version": "1.7.20",
     "vgDistName": "bulk-edit-categories-tags",
-    "vgPreviousVersion": "1.7.19-beta.1",
+    "vgPreviousVersion": "1.7.20-beta.1",
     "sheetEditorModules": {
         "free": [
             "autofill-cells",
