@@ -305,6 +305,7 @@ WHERE tt.taxonomy = %s AND pm.meta_key = %s",
 	 * @return array An array of associative arrays, each containing a term object, its level, and its ID.
 	 */
 	function prepare_terms_list( $taxonomy, $terms, &$children, $start, $per_page, &$count, $query_args, $parent = 0, $level = 0 ) {
+		$is_search = ! empty( $query_args['search'] ) || ( ! empty( $query_args['wpse_original_filters'] ) && ! empty( $query_args['wpse_original_filters']['meta_query'] ) ) || ! empty( $query_args['wpse_term_parents'] );
 
 		$end       = $start + $per_page;
 		$new_terms = array();
@@ -314,12 +315,12 @@ WHERE tt.taxonomy = %s AND pm.meta_key = %s",
 				break;
 			}
 
-			if ( $term->parent != $parent && empty( $query_args['search'] ) && empty( $query_args['wpse_term_parents'] ) ) {
+			if ( $term->parent != $parent && ! $is_search ) {
 				continue;
 			}
 
 			// If the page starts in a subtree, print the parents.
-			if ( $count == $start && $term->parent > 0 && empty( $query_args['search'] ) && empty( $query_args['wpse_term_parents'] ) ) {
+			if ( $count == $start && $term->parent > 0 && ! $is_search ) {
 				$my_parents = $parent_ids = array();
 				$p          = $term->parent;
 				while ( $p ) {
@@ -356,7 +357,7 @@ WHERE tt.taxonomy = %s AND pm.meta_key = %s",
 
 			unset( $terms[ $key ] );
 
-			if ( isset( $children[ $term->term_id ] ) && empty( $query_args['search'] ) && empty( $query_args['wpse_term_parents'] ) ) {
+			if ( isset( $children[ $term->term_id ] ) && ! $is_search ) {
 				$new_terms = array_merge( $new_terms, $this->prepare_terms_list( $taxonomy, $terms, $children, $start, $per_page, $count, $query_args, $term->term_id, $level + 1 ) );
 			}
 		}
