@@ -2,22 +2,20 @@
 
 defined( 'ABSPATH' ) || exit;
 /*
-  Plugin Name: WP Sheet Editor - Taxonomy Terms
-  Description: Edit categories and tags in a spreadsheet.
-  Version: 1.7.21
-  Author:      WP Sheet Editor
-  Author URI:  https://wpsheeteditor.com/?utm_source=wp-admin&utm_medium=plugins-list&utm_campaign=taxonomy-terms
-  Plugin URI: https://wpsheeteditor.com/go/taxonomy-terms-addon?utm_source=wp-admin&utm_medium=plugins-list&utm_campaign=taxonomy-terms
-  License:     GPL2
-  License URI: https://www.gnu.org/licenses/gpl-2.0.html
-  WC requires at least: 4.0
-  WC tested up to: 9.9
-  Text Domain: vg_sheet_editor_taxonomy_terms
-  Domain Path: /lang
+	Plugin Name: WP Sheet Editor - Taxonomy Terms
+	Description: Edit categories and tags in a spreadsheet.
+	Version: 1.7.23
+	Author:      WP Sheet Editor
+	Author URI:  https://wpsheeteditor.com/?utm_source=wp-admin&utm_medium=plugins-list&utm_campaign=taxonomy-terms
+	Plugin URI: https://wpsheeteditor.com/go/taxonomy-terms-addon?utm_source=wp-admin&utm_medium=plugins-list&utm_campaign=taxonomy-terms
+	License:     GPL2
+	License URI: https://www.gnu.org/licenses/gpl-2.0.html
+	Requires at least: 4.7
+	WC requires at least: 4.0
+	WC tested up to: 10.4.3
+	Text Domain: vg_sheet_editor_taxonomy_terms
+	Domain Path: /lang
 */
-if ( isset( $_GET['wpse_troubleshoot8987'] ) ) {
-    return;
-}
 if ( !defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -44,11 +42,11 @@ if ( !class_exists( 'WP_Sheet_Editor_Taxonomy_Terms' ) ) {
 
         public $version = '1.5.4';
 
-        var $settings = null;
+        public $settings = null;
 
         public $args = null;
 
-        var $vg_plugin_sdk = null;
+        public $vg_plugin_sdk = null;
 
         public $modules_controller = null;
 
@@ -76,11 +74,15 @@ if ( !class_exists( 'WP_Sheet_Editor_Taxonomy_Terms' ) ) {
 
         function notify_wrong_core_version() {
             $plugin_data = get_plugin_data( __FILE__, false, false );
+            // Replace with VGSE()->render_message_update_all_wpse_plugins( $plugin_data['Name'] ); in the future
             ?>
-			<div class="notice notice-error">
-				<p><?php 
-            _e( 'Please update the WP Sheet Editor plugin and all its extensions to the latest version. The features of the plugin "' . $plugin_data['Name'] . '" will be disabled temporarily because it is the newest version and it conflicts with old versions of other WP Sheet Editor plugins. The features will be enabled automatically after you install the updates.', vgse_taxonomy_terms()->textname );
-            ?></p>
+			<div class="notice notice-error wpse-notice">
+				<p>
+				<?php 
+            // translators: 1: plugin name
+            printf( esc_html__( 'Please update the WP Sheet Editor plugin and all its extensions to the latest version. The features of the plugin "%s" will be disabled temporarily because it is the newest version and it conflicts with old versions of other WP Sheet Editor plugins. The features will be enabled automatically after you install the updates.', 'vg_sheet_editor' ), esc_html( $plugin_data['Name'] ) );
+            ?>
+				</p>
 			</div>
 			<?php 
         }
@@ -92,6 +94,15 @@ if ( !class_exists( 'WP_Sheet_Editor_Taxonomy_Terms' ) ) {
             $this->plugin_dir = __DIR__;
             $this->buy_link = wpsett_fs()->checkout_url();
             $this->init_plugin_sdk();
+            add_action( 'before_woocommerce_init', function () {
+                if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+                    $main_file = __FILE__;
+                    $parent_dir = dirname( $main_file, 2 );
+                    $new_path = str_replace( $parent_dir, '', $main_file );
+                    $new_path = wp_normalize_path( ltrim( $new_path, '\\/' ) );
+                    \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', $new_path, true );
+                }
+            } );
             if ( !class_exists( 'VGSE_Provider_Abstract' ) ) {
                 add_action( 'admin_notices', array($this, 'notify_wrong_core_version') );
                 return;
@@ -104,19 +115,10 @@ if ( !class_exists( 'WP_Sheet_Editor_Taxonomy_Terms' ) ) {
             add_action( 'vg_sheet_editor/initialized', array($this, 'after_core_init') );
             add_action( 'admin_init', array($this, 'disable_free_plugins_when_premium_active'), 1 );
             add_action( 'init', array($this, 'after_init') );
-            add_action( 'before_woocommerce_init', function () {
-                if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
-                    $main_file = __FILE__;
-                    $parent_dir = dirname( dirname( $main_file ) );
-                    $new_path = str_replace( $parent_dir, '', $main_file );
-                    $new_path = wp_normalize_path( ltrim( $new_path, '\\/' ) );
-                    \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', $new_path, true );
-                }
-            } );
         }
 
         function after_init() {
-            load_plugin_textdomain( $this->textname, false, basename( dirname( __FILE__ ) ) . '/lang/' );
+            load_plugin_textdomain( $this->textname, false, basename( __DIR__ ) . '/lang/' );
         }
 
         function disable_free_plugins_when_premium_active() {

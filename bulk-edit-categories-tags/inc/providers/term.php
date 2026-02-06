@@ -460,7 +460,7 @@ WHERE tt.taxonomy = %s AND pm.meta_key = %s",
 			$values['ID'] = $this->create_item( array( 'post_type' => $taxonomy ) );
 		}
 		if ( empty( $values['ID'] ) ) {
-			return new WP_Error( 'wpse', __( 'The item id does not exist. Error #89827j', vgse_taxonomy_terms()->textname ) );
+			return new WP_Error( 'wpse', esc_html__( 'The item id does not exist. Error #89827j', vgse_taxonomy_terms()->textname ) );
 		}
 
 		$values  = $this->_standarize_item( $values, 'save' );
@@ -478,6 +478,9 @@ WHERE tt.taxonomy = %s AND pm.meta_key = %s",
 			$values['description'] = wp_kses_post( $values['description'] );
 		}
 		$result = wp_update_term( $term_id, $item['taxonomy'], $values );
+		if ( is_wp_error( $result ) ) {
+			$result->add( 'wpse_id', esc_html__( 'Term ID:', vgse_taxonomy_terms()->textname ) . ' ' . $term_id );
+		}
 		add_filter( 'pre_term_description', 'wp_filter_kses' );
 
 		if ( ! empty( $values['taxonomy'] ) && $values['taxonomy'] !== $item['taxonomy'] ) {
@@ -563,6 +566,7 @@ WHERE tt.taxonomy IN (%s) AND ( " . implode( " $joiner ", $checks ) . ' )
 ORDER BY t.name ASC ',
 			array_merge( array( $post_type ), $prepared_checks )
 		);
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$ids = $wpdb->get_col( $sql );
 		return $ids;
 	}
@@ -606,6 +610,7 @@ WHERE tt.taxonomy IN (%s) AND  tm.meta_key = %s GROUP BY tm.meta_value ORDER BY 
 			$meta_key
 		);
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$values = apply_filters( 'vg_sheet_editor/provider/term/meta_field_unique_values', $wpdb->get_col( $sql ), $meta_key, $post_type );
 		return $values;
 	}

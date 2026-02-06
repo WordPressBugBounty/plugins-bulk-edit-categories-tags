@@ -4,7 +4,7 @@ defined( 'ABSPATH' ) || exit;
 $instance = vgse_taxonomy_terms();
 ?>
 <p><?php 
-_e( 'Thank you for installing our plugin.', $instance->textname );
+esc_html_e( 'Thank you for installing our plugin.', $instance->textname );
 ?></p>
 
 <?php 
@@ -30,7 +30,8 @@ foreach ( $all['post_types'] as $index => $sheet ) {
         $sheets_buttons .= '<br>' . $all['labels'][$index] . '. <a href="' . esc_url( VGSE()->get_buy_link( 'sheet-locked-column-' . $sheet ) ) . '" >Premium</a>';
     }
 }
-$steps['open_editor'] = '<p>' . sprintf( __( 'You can open the Bulk Editor Now:  %s', $instance->textname ), $sheets_buttons ) . '</p>';
+/* translators: %s: Bulk editor buttons html */
+$steps['open_editor'] = '<p>' . sprintf( esc_html__( 'You can open the Bulk Editor Now:  %s', $instance->textname ), $sheets_buttons ) . '</p>';
 require VGSE_DIR . '/views/free-extensions-for-welcome.php';
 $steps['free_extensions'] = $free_extensions_html;
 $steps = apply_filters( 'vg_sheet_editor/taxonomy_terms/welcome_steps', $steps );

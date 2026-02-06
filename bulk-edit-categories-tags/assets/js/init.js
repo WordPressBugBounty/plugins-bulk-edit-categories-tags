@@ -189,6 +189,7 @@ jQuery(document).ready(function () {
 				perPage = 3;
 			}
 			// Start saving posts, start ajax loop
+			var deletedCount = 0;
 			beAjaxLoop({
 				totalCalls: $form.find('select[name="vgse_terms_source"]').val() === 'duplicates' ? 9999999 : Math.ceil(rowsCount / parseInt(perPage)),
 				url: $form.attr('action'),
@@ -240,12 +241,14 @@ jQuery(document).ready(function () {
 					}
 					nanobar.go(currentNanobar);
 
+					deletedCount += res.data.deleted.length;
+
 
 					// Display message saying the number of posts saved so far
 					var updated = (parseInt(perPage) * settings.current > rowsCount) ? rowsCount : parseInt(perPage) * settings.current;
 					var messageTemplate = $form.find('select[name="vgse_terms_source"]').val() === 'duplicates' ? vgse_editor_settings.texts.duplicates_removed_text : vgse_editor_settings.texts.paged_batch_saved;
 					var text = messageTemplate.replace('{updated}', updated);
-					var text = messageTemplate.replace('{deleted}', res.data.deleted.length);
+					var text = messageTemplate.replace('{deleted}', deletedCount);
 					var text = text.replace('{total}', rowsCount);
 					jQuery($progress).empty().append('<p>' + text + '</p>');
 

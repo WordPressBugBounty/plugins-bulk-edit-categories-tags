@@ -1,9 +1,9 @@
 === Bulk Edit Categories and Tags - Create Thousands Quickly on the Editor ===
 Contributors: wpsheeteditor,vegacorp,josevega
 Tags: posts, taxonomies, bulk edit, spreadsheet, spreadsheet editor
-Stable tag: 1.7.21
+Stable tag: 1.7.23
 Requires at least: 4.7
-Tested up to: 6.8
+Tested up to: 6.9
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -130,6 +130,14 @@ Yes. You can set up the number of posts to save per batch and the waiting betwee
 1. bulk editor
 
 == Changelog ==
+= V 1.7.23 - 2026-01-18 =
+* FIX - TERMS - Parent name filter not working
+
+
+= V 1.7.22 - 2026-01-06 =
+* Updated to CORE v2.26.0
+
+
 = V 1.7.21 - 2025-07-11 =
 * FIX - TERMS - Bug fixes related to advanced searches
 

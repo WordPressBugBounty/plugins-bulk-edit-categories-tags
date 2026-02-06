@@ -23,7 +23,7 @@ if (!class_exists('WPSE_Taxonomy_Terms_Spreadsheet_Bootstrap')) {
 			}
 			$taxonomy = VGSE()->helpers->sanitize_table_key($_GET['taxonomy']);
 			?>
-			<hr><p class="wpse-quick-access"><a href="<?php echo esc_url(VGSE()->helpers->get_editor_url($taxonomy)); ?>" class="button button-primary"><?php _e('Edit in a Spreadsheet', vgse_taxonomy_terms()->textname); ?></a></p><hr>
+			<hr><p class="wpse-quick-access"><a href="<?php echo esc_url(VGSE()->helpers->get_editor_url($taxonomy)); ?>" class="button button-primary"><?php esc_html_e('Edit in a Spreadsheet', vgse_taxonomy_terms()->textname); ?></a></p><hr>
 			<?php
 		}
 
@@ -34,7 +34,7 @@ if (!class_exists('WPSE_Taxonomy_Terms_Spreadsheet_Bootstrap')) {
 				$this->columns->register_item('ID', $post_type, array(
 					'data_type' => 'post_data', 	
 					'column_width' => 75, 
-					'title' => __('ID', vgse_taxonomy_terms()->textname),
+					'title' => esc_html__('ID', vgse_taxonomy_terms()->textname),
 					'type' => '',
 					'supports_formulas' => false,
 					'allow_to_hide' => false,
@@ -46,7 +46,7 @@ if (!class_exists('WPSE_Taxonomy_Terms_Spreadsheet_Bootstrap')) {
 					$this->columns->register_item('wpse_term_levels', $post_type, array(
 						'data_type' => 'post_data', 	
 						'column_width' => 100, 
-						'title' => __('Hierarchy', vgse_taxonomy_terms()->textname),
+						'title' => esc_html__('Hierarchy', vgse_taxonomy_terms()->textname),
 						'allow_to_hide' => false,
 						'allow_to_save' => false,
 						'allow_to_save_sanitization' => false,
@@ -57,20 +57,20 @@ if (!class_exists('WPSE_Taxonomy_Terms_Spreadsheet_Bootstrap')) {
 				$this->columns->register_item('name', $post_type, array(
 					'data_type' => 'post_data',
 					'column_width' => 210,
-					'title' => __('Name', vgse_taxonomy_terms()->textname),
+					'title' => esc_html__('Name', vgse_taxonomy_terms()->textname),
 					'supports_formulas' => true,
 				));
 				$this->columns->register_item('slug', $post_type, array(
 					'data_type' => 'post_data',
 					'column_width' => 150,
-					'title' => __('Slug', vgse_taxonomy_terms()->textname),
+					'title' => esc_html__('Slug', vgse_taxonomy_terms()->textname),
 					'supports_formulas' => true,
 				));
 				if (is_taxonomy_hierarchical($post_type)) {
 					$this->columns->register_item('parent', $post_type, array(
 						'data_type' => 'post_data', 	
 						'column_width' => 100,
-						'title' => __('Parent', vgse_taxonomy_terms()->textname),
+						'title' => esc_html__('Parent', vgse_taxonomy_terms()->textname),
 						'formatted' => array(
 							'type' => 'autocomplete',
 							'source' => 'loadTaxonomyTerms',
@@ -83,7 +83,7 @@ if (!class_exists('WPSE_Taxonomy_Terms_Spreadsheet_Bootstrap')) {
 				$this->columns->register_item('wpse_status', $post_type, array(
 					'data_type' => 'post_data', 	
 					'column_width' => 80, 
-					'title' => __('Status', vgse_taxonomy_terms()->textname),
+					'title' => esc_html__('Status', vgse_taxonomy_terms()->textname),
 					'type' => '',
 					'supports_formulas' => true,
 					'allow_to_hide' => false,
@@ -104,7 +104,7 @@ if (!class_exists('WPSE_Taxonomy_Terms_Spreadsheet_Bootstrap')) {
 				$this->columns->register_item($count_key, $post_type, array(
 					'data_type' => 'post_data', 	
 					'column_width' => 75,
-					'title' => __('Count', vgse_taxonomy_terms()->textname),
+					'title' => esc_html__('Count', vgse_taxonomy_terms()->textname),
 					'supports_formulas' => false,
 					'allow_to_save' => false,
 					'is_locked' => true,
@@ -112,7 +112,7 @@ if (!class_exists('WPSE_Taxonomy_Terms_Spreadsheet_Bootstrap')) {
 				$post_content_args = array(
 					'data_type' => 'post_data',
 					'column_width' => 180,
-					'title' => __('Description', vgse_taxonomy_terms()->textname),
+					'title' => esc_html__('Description', vgse_taxonomy_terms()->textname),
 					'type' => 'boton_tiny',
 					'supports_formulas' => true,
 					'allow_to_hide' => true,
@@ -124,7 +124,7 @@ if (!class_exists('WPSE_Taxonomy_Terms_Spreadsheet_Bootstrap')) {
 					'data_type' => 'post_data', 	
 					'column_width' => 100, 
 					'supports_formulas' => true,
-					'title' => __('Taxonomy', vgse_taxonomy_terms()->textname),
+					'title' => esc_html__('Taxonomy', vgse_taxonomy_terms()->textname),
 					'formatted' => array('editor' => 'select', 'selectOptions' => $post_types),
 					'supports_sql_formulas' => false,
 				));
@@ -133,22 +133,22 @@ if (!class_exists('WPSE_Taxonomy_Terms_Spreadsheet_Bootstrap')) {
 					$this->columns->register_item('display_type', $post_type, array(
 						'data_type' => 'meta_data',
 						'column_width' => 100,
-						'title' => __('Display type', 'woocommerce'),
+						'title' => esc_html__('Display type', 'woocommerce'),
 						'type' => '',
 						'supports_formulas' => true,
 						'allow_to_hide' => true,
 						'allow_to_save' => true,
 						'allow_to_rename' => true,
 						'formatted' => array('editor' => 'select', 'selectOptions' => array(
-								'' => __('Default', 'woocommerce'),
-								'products' => __('Products', 'woocommerce'),
-								'subcategories' => __('Subcategories', 'woocommerce'),
-								'both' => __('Both', 'woocommerce'),
+								'' => esc_html__('Default', 'woocommerce'),
+								'products' => esc_html__('Products', 'woocommerce'),
+								'subcategories' => esc_html__('Subcategories', 'woocommerce'),
+								'both' => esc_html__('Both', 'woocommerce'),
 							)),
 					));
 					$this->columns->register_item('thumbnail_id', $post_type, array(
 						'data_type' => 'meta_data',
-						'title' => __('Thumbnail', 'woocommerce'),
+						'title' => esc_html__('Thumbnail', 'woocommerce'),
 						'column_width' => 160,
 						'supports_formulas' => true,
 						'type' => 'boton_gallery',
@@ -161,7 +161,7 @@ if (!class_exists('WPSE_Taxonomy_Terms_Spreadsheet_Bootstrap')) {
 					$this->columns->register_item('wpse_full_hierarchy', $post_type, array(
 						'data_type' => 'post_data', 	
 						'column_width' => 100,
-						'title' => __('Full hierarchy', vgse_taxonomy_terms()->textname),
+						'title' => esc_html__('Full hierarchy', vgse_taxonomy_terms()->textname),
 						'supports_formulas' => true,
 						'supports_sql_formulas' => false,
 						'get_value_callback' => array($this, 'get_full_hierarchy'),
@@ -170,7 +170,7 @@ if (!class_exists('WPSE_Taxonomy_Terms_Spreadsheet_Bootstrap')) {
 				}
 				$this->columns->register_item('wpse_old_platform_id', $post_type, array(
 					'data_type' => 'meta_data',
-					'title' => __('Old Platform ID', 'woocommerce'),
+					'title' => esc_html__('Old Platform ID', 'woocommerce'),
 					'column_width' => 120,
 					'supports_formulas' => true,
 					'type' => '',
@@ -182,7 +182,7 @@ if (!class_exists('WPSE_Taxonomy_Terms_Spreadsheet_Bootstrap')) {
 				if( get_taxonomy( $post_type ) && get_taxonomy( $post_type )->publicly_queryable ){
 					$this->columns->register_item('wpse_view_term', $post_type, array(
 						'data_type'                => 'post_data',
-						'title'                    => __( 'View', 'vg_sheet_editor' ),
+						'title'                    => esc_html__( 'View', 'vg_sheet_editor' ),
 						'type'                     => 'external_button',
 						'supports_formulas'        => false,
 						'allow_to_hide'            => true,

@@ -3,7 +3,7 @@
 defined( 'ABSPATH' ) || exit;
 if ( !class_exists( 'WPSE_Taxonomy_Terms_Sheet' ) ) {
     class WPSE_Taxonomy_Terms_Sheet extends WPSE_Sheet_Factory {
-        var $parent_id_mapping = array();
+        public $parent_id_mapping = array();
 
         public function __construct() {
             $allowed_columns = array();
@@ -219,11 +219,11 @@ if ( !class_exists( 'WPSE_Taxonomy_Terms_Sheet' ) ) {
                 ?>
 				<li>
 					<label><?php 
-                _e( 'Parent keyword', 'vg_sheet_editor' );
+                esc_html_e( 'Parent keyword', 'vg_sheet_editor' );
                 ?> <a href="#" data-wpse-tooltip="right" aria-label="<?php 
-                _e( 'We will display all the categories below parent that contains this keyword', 'vg_sheet_editor' );
+                esc_html_e( 'We will display all the categories below parent that contains this keyword', 'vg_sheet_editor' );
                 ?>">( ? )</a></label>
-					<input type="text" name="parent_term_keyword" />							
+					<input type="text" name="parent_term_keyword" x-model="activeFilters.parent_term_keyword" />							
 				</li>
 				<?php 
             }
@@ -251,9 +251,19 @@ if ( !class_exists( 'WPSE_Taxonomy_Terms_Sheet' ) ) {
             }
             ?>
 			<style>.field-find-existing-columns .wp-check-message { display: none; }</style>
-			<p class="wp-custom-check-message"><?php 
-            _e( 'We find items that have the same SLUG in the CSV and the WP Field.<br>Please select the CSV column that contains the slug.<br>You must import the slug column if you want to update existing categories, items without slug will be created as new.', vgse_taxonomy_terms()->textname );
-            ?></p>
+			<p class="wp-custom-check-message">
+				<?php 
+            esc_html_e( 'We find items that have the same SLUG in the CSV and the WP Field.', vgse_taxonomy_terms()->textname );
+            ?>
+				<br>
+				<?php 
+            esc_html_e( 'Please select the CSV column that contains the slug.', vgse_taxonomy_terms()->textname );
+            ?>
+				<br>
+				<?php 
+            esc_html_e( 'You must import the slug column if you want to update existing categories, items without slug will be created as new.', vgse_taxonomy_terms()->textname );
+            ?>
+			</p>			
 			<?php 
         }
 
@@ -318,7 +328,7 @@ if ( !class_exists( 'WPSE_Taxonomy_Terms_Sheet' ) ) {
                 'wpse-taxonomy-terms-js',
                 plugins_url( '/assets/js/init.js', vgse_taxonomy_terms()->args['main_plugin_file'] ),
                 array(),
-                VGSE()->version,
+                filemtime( dirname( vgse_taxonomy_terms()->args['main_plugin_file'] ) . '/assets/js/init.js' ),
                 false
             );
             wp_localize_script( 'wpse-taxonomy-terms-js', 'wpse_tt_data', array(
